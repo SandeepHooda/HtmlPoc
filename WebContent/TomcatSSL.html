@@ -1,0 +1,34 @@
+<p><br/>
+<b>SSL Setup</b><br/>
+1. Install openssl and add the bin folder to windows's PATH<br/>
+2. Open cmd in administrator prompt and go to tomcat_home\conf<br/>
+3. The the below two commans <br/>
+openssl genrsa -des3 –out priv.pem -passout pass:Sandeep@1234 1024<br/>
+<br/>
+and<br/>
+<br/>
+openssl req -x509 -config C:\openssl-0.9.8h-1-bin\share\openssl.cnf -new -key priv.pem -passin pass:Sandeep@1234 -days 3650 -out cert.cer<br/>
+<br/>
+4. The above commands will generate "priv.pem" and "cert.cer"<br/>
+5. priv.pem is server's private key<br/>
+6. cert.cer is a certificate which contains servers's public key and other other information like orgination, name, country issuer etc <br/>
+7. Now open tomcat_home\conf\server.xml and add this<br/>
+       <br/>
+	      &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;  <br/>
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; &gt;    <br/>
+        &lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt; <br/>
+        &lt;SSLHostConfig&gt;     <br/>
+            &lt;Certificate certificateKeyFile=&quot;C:\apache-tomcat-9.0.0.M19\conf\priv.pem&quot; <br/>
+                         certificateFile=&quot;C:\apache-tomcat-9.0.0.M19\conf\cert.cer&quot; <br/>
+                        <br/>
+                         type=&quot;RSA&quot; /&gt; <br/>
+        &lt;/SSLHostConfig&gt; <br/>
+    &lt;/Connector&gt;  <br/>
+<br/>
+<b>Server </b> create server tomcat9 (jdk 8) <br/>
+1. download APR  (Apache Portable Runtime ) from http://tomcat.apache.org/download-native.cgi<br/>
+2. use 32bit or AMD x86-64 binaries <br/>
+3. paste tcnative-1.dll and tcnative-1-src.pdb in tomcat_home\bin<br/>
+4. In eclipse double click on teh server and click "Open Launch configuration"<br/>
+5. In argumants tab to to VM arguments type  -Djava.library.path="C:\apache-tomcat-9.0.0.M19\bin"<br/>
+<p>
